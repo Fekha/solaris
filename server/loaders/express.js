@@ -61,6 +61,7 @@ module.exports = async (app, io, container) => {
     const game = require('../api/game')(router, io, container);
     const research = require('../api/game/research')(router, io, container);
     const trade = require('../api/game/trade')(router, io, container);
+    const diplomacy = require('../api/game/diplomacy')(router, io, container);
     const star = require('../api/game/star')(router, io, container);
     const carrier = require('../api/game/carrier')(router, io, container);
     const message = require('../api/game/message')(router, io, container);
@@ -74,6 +75,7 @@ module.exports = async (app, io, container) => {
     app.use(game);
     app.use(research);
     app.use(trade);
+    app.use(diplomacy);
     app.use(star);
     app.use(carrier);
     app.use(message);

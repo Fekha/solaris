@@ -71,12 +71,14 @@ export default {
   created () {
     this.sockets.subscribe('gameMessageSent', this.onMessageReceived)
     this.sockets.subscribe('playerCreditsReceived', this.onTradeEventReceived)
+    this.sockets.subscribe('playerAllianceRequestReceived', this.onTradeEventReceived)
     this.sockets.subscribe('playerRenownReceived', this.onTradeEventReceived)
     this.sockets.subscribe('playerTechnologyReceived', this.onTradeEventReceived)
   },
   destroyed () {
     this.sockets.unsubscribe('gameMessageSent')
     this.sockets.unsubscribe('playerCreditsReceived')
+    this.sockets.unsubscribe('playerAllianceRequestReceived')
     this.sockets.unsubscribe('playerRenownReceived')
     this.sockets.unsubscribe('playerTechnologyReceived')
   },

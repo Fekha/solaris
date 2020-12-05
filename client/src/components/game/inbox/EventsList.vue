@@ -86,6 +86,7 @@ export default {
           'playerTechnologySent',
           'playerCreditsReceived',
           'playerCreditsSent',
+          'playerAllianceRequestSent',
           'playerRenownReceived',
           'playerRenownSent',
           'playerDebtSettled',

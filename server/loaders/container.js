@@ -29,6 +29,7 @@ const NameService = require('../services/name');
 const StarUpgradeService = require('../services/starUpgrade');
 const TechnologyService = require('../services/technology');
 const TradeService = require('../services/trade');
+const DiplomacyService = require('../services/diplomacy');
 const WaypointService = require('../services/waypoint');
 const MessageService = require('../services/message');
 const ShipTransferService = require('../services/shipTransfer');
@@ -74,6 +75,7 @@ module.exports = (io) => {
     const gameService = new GameService(GameModel, userService, carrierService, playerService, passwordService);
     const researchService = new ResearchService(technologyService, randomService, playerService, userService, technologyService);
     const tradeService = new TradeService(userService, playerService, ledgerService);
+    const diplomacyService = new DiplomacyService(userService, playerService);
     const waypointService = new WaypointService(carrierService, starService, distanceService, starDistanceService, technologyService);
     const gameCreateService = new GameCreateService(GameModel, gameListService, nameService, mapService, playerService, passwordService);
     const starUpgradeService = new StarUpgradeService(starService, carrierService, userService, researchService, technologyService);
@@ -85,7 +87,7 @@ module.exports = (io) => {
     const shipTransferService = new ShipTransferService(carrierService, starService);
     
     const eventService = new EventService(EventModel, broadcastService, gameService, gameTickService, researchService, starService, starUpgradeService, tradeService,
-        ledgerService);
+        ledgerService, diplomacyService);
 
     return {
         passwordService,
@@ -112,6 +114,7 @@ module.exports = (io) => {
         starUpgradeService,
         technologyService,
         tradeService,
+        diplomacyService,
         userService,
         waypointService,
         shipTransferService,

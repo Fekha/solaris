@@ -21,6 +21,8 @@ module.exports = class EventService {
         PLAYER_TECHNOLOGY_SENT: 'playerTechnologySent',
         PLAYER_CREDITS_RECEIVED: 'playerCreditsReceived',
         PLAYER_CREDITS_SENT: 'playerCreditsSent',
+        PLAYER_ALLIANCE_REQUEST_RECEIVED: 'playerAllianceRequestReceived',
+        PLAYER_ALLIANCE_REQUEST_SENT: 'playerAllianceRequestSent',
         PLAYER_RENOWN_RECEIVED: 'playerRenownReceived',
         PLAYER_RENOWN_SENT: 'playerRenownSent',
         PLAYER_STAR_ABANDONED: 'playerStarAbandoned',
@@ -33,7 +35,7 @@ module.exports = class EventService {
 
     constructor(eventModel, broadcastService,
         gameService, gameTickService, researchService, starService, starUpgradeService, tradeService,
-        ledgerService) {
+        ledgerService, diplomacyService) {
         this.eventModel = eventModel;
         this.broadcastService = broadcastService;
         this.gameService = gameService;
@@ -43,6 +45,7 @@ module.exports = class EventService {
         this.starUpgradeService = starUpgradeService;
         this.tradeService = tradeService;
         this.ledgerService = ledgerService;
+        this.diplomacyService = diplomacyService;
 
         this.gameService.on('onPlayerJoined', (args) => this.createPlayerJoinedEvent(args.game, args.player));
         this.gameService.on('onGameStarted', (args) => this.createGameStartedEvent(args.game));
@@ -71,12 +74,17 @@ module.exports = class EventService {
         this.starUpgradeService.on('onPlayerCarrierBuilt', (args) => this.createCarrierBuiltEvent(args.game, args.player, args.star, args.carrier));
         this.starUpgradeService.on('onPlayerInfrastructureBulkUpgraded', (args) => this.createInfrastructureBulkUpgraded(args.game, args.player, args.upgradeSummary));
 
+
+
         this.tradeService.on('onPlayerCreditsReceived', (args) => this.createCreditsReceivedEvent(args.game, args.fromPlayer, args.toPlayer, args.amount));
         this.tradeService.on('onPlayerCreditsSent', (args) => this.createCreditsSentEvent(args.game, args.fromPlayer, args.toPlayer, args.amount));
         this.tradeService.on('onPlayerRenownReceived', (args) => this.createRenownReceivedEvent(args.game, args.fromPlayer, args.toPlayer, args.amount));
         this.tradeService.on('onPlayerRenownSent', (args) => this.createRenownSentEvent(args.game, args.fromPlayer, args.toPlayer, args.amount));
         this.tradeService.on('onPlayerTechnologyReceived', (args) => this.createTechnologyReceivedEvent(args.game, args.fromPlayer, args.toPlayer, args.technology));
         this.tradeService.on('onPlayerTechnologySent', (args) => this.createTechnologySentEvent(args.game, args.fromPlayer, args.toPlayer, args.technology));
+
+        this.diplomacyService.on('onPlayerAllianceRequestSent', (args) => this.createAllianceRequestSentEvent(args.game, args.fromPlayer, args.toPlayer));
+        this.diplomacyService.on('onPlayerAllianceRequestReceived', (args) => this.createAllianceRequestReceivedEvent(args.game, args.fromPlayer, args.toPlayer));
 
         this.ledgerService.on('onDebtAdded', (args) => this.createDebtAddedEvent(args.game, args.debtor, args.creditor, args.amount));
         this.ledgerService.on('onDebtSettled', (args) => this.createDebtSettledEvent(args.game, args.debtor, args.creditor, args.amount));
@@ -300,6 +308,22 @@ module.exports = class EventService {
         };
 
         return await this.createPlayerEvent(game, fromPlayer._id, this.EVENT_TYPES.PLAYER_TECHNOLOGY_SENT, data);
+    }
+
+    async createAllianceRequestReceivedEvent(game, fromPlayer, toPlayer) {
+        let data = {
+            fromPlayerId: fromPlayer._id,
+        };
+
+        return await this.createPlayerEvent(game, toPlayer._id, this.EVENT_TYPES.PLAYER_ALLIANCE_REQUEST_RECEIVED, data);
+    }
+
+    async createAllianceRequestSentEvent(game, fromPlayer, toPlayer) {
+        let data = {
+            toPlayerId: toPlayer._id,
+        };
+
+        return await this.createPlayerEvent(game, fromPlayer._id, this.EVENT_TYPES.PLAYER_ALLIANCE_REQUEST_SENT, data);
     }
 
     async createCreditsReceivedEvent(game, fromPlayer, toPlayer, credits) {

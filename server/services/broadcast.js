@@ -120,6 +120,18 @@ module.exports = class BroadcastService {
         this.io.to(playerId).emit('gameMessagesAllRead');
     }
 
+    gamePlayerAllianceRequestReceived(game, fromPlayerId, toPlayerId, date) {
+        this.io.to(toPlayerId).emit('playerAllianceRequestReceived', {
+            playerId: toPlayerId,
+            type: 'playerAllianceRequestReceived',
+            date,
+            data: {
+                fromPlayerId,
+                toPlayerId
+            }
+        });
+    }
+
     gamePlayerCreditsReceived(game, fromPlayerId, toPlayerId, credits, date) {
         this.io.to(toPlayerId).emit('playerCreditsReceived', {
             playerId: toPlayerId,

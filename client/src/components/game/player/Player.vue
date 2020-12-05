@@ -41,6 +41,16 @@
       <p v-if="!canTradeWithPlayer" class="text-danger">You cannot trade with this player, they are not within scanning range.</p>
     </div>
 
+    <div v-if="game.state.startDate && userPlayer && player != userPlayer && !userPlayer.defeated && !isGameFinished">
+      <h4 class="mt-2">Formal Alliance</h4>
+
+      <div v-if="canAllyWithPlayer">
+        <requestAlliance :player="player" :userPlayer="userPlayer"/>
+      </div>
+
+      <p v-if="!canAllyWithPlayer" class="text-danger">You cannot ally with this player, they are not within scanning range.</p>
+    </div>
+
     <loading-spinner :loading="player && !player.isEmptySlot && !user"/>
 
     <h4 class="mt-2" v-if="player && !player.isEmptySlot && isValidUser">Achievements</h4>
@@ -69,6 +79,7 @@ import YourInfrastructure from './YourInfrastructure'
 import Research from './Research'
 import SendTechnology from './SendTechnology'
 import SendCredits from './SendCredits'
+import RequestAlliance from './RequestAlliance'
 import Achievements from './Achievements'
 import SendRenown from './SendRenown'
 import Badges from './Badges'
@@ -85,6 +96,7 @@ export default {
     'research': Research,
     'sendTechnology': SendTechnology,
     'sendCredits': SendCredits,
+    'requestAlliance': RequestAlliance,
     'achievements': Achievements,
     'sendRenown': SendRenown,
     'badges': Badges
@@ -100,6 +112,7 @@ export default {
       playerIndex: 0
     }
   },
+
   async mounted () {
     this.player = GameHelper.getPlayerById(this.$store.state.game, this.playerId)
 
@@ -168,6 +181,9 @@ export default {
     },
     canTradeWithPlayer: function () {
       return this.$store.state.game.settings.player.tradeScanning === 'all' || (this.player && this.player.isInScanningRange)
+    },
+    canAllyWithPlayer: function () {
+      return this.player
     },
     isGameFinished: function () {
       return GameHelper.isGameFinished(this.$store.state.game)

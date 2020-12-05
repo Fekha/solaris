@@ -99,6 +99,8 @@ export default {
     'player-combat-carrier': PlayerCombatCarrierEventVue,
     'player-credits-received': PlayerCreditsReceivedVue,
     'player-credits-sent': PlayerCreditsSentVue,
+    'player-alliance-request-received': PlayerCreditsReceivedVue,
+    'player-alliance-request-sent': PlayerCreditsSentVue,
     'player-galactic-cycle-complete': PlayerGalacticCycleCompleteEventVue,
     'player-renown-received': PlayerRenownReceivedVue,
     'player-renown-sent': PlayerRenownSentVue,
